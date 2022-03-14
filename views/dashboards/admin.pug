@@ -1,0 +1,122 @@
+extends ../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .row.row-cols-1.row-cols-md-5
+        .col
+          .card.radius-10
+            .card-body
+              .text-center
+                p.mb-0.text-secondary Counter Sales
+                //- .widgets-icons.rounded-circle.mx-auto.bg-light-secondary.text-warning.my-3
+                .text-danger.ms-auto.font-35
+                  a(href='/sales')
+                    i.bx.bx-lg.bx-shopping-bag
+                h5.my-1 #{ saleSum } / #{ saleCount }
+        .col
+          .card.radius-10
+            .card-body
+              .text-center
+                p.mb-0.text-secondary Today's Orders
+                //- .widgets-icons.rounded-circle.mx-auto.bg-light-secondary.text-success.my-3
+                .text-danger.ms-auto.font-35
+                  a(href='/orders')
+                    i.bx.bx-lg.bxs-shopping-bag-alt
+                h5.my-1 #{ orderSum } / #{ orderCount }
+        .col
+          .card.radius-10
+            .card-body
+              .text-center
+                p.mb-0.text-secondary Today's Purchases
+                //- .widgets-icons.rounded-circle.mx-auto.bg-light-secondary.text-primary.my-3
+                .text-danger.ms-auto.font-35
+                  a(href='/purchases')
+                    i.bx.bx-lg.bxs-store
+                h5.my-1 #{ purchaseSum } / #{ purchaseCount }
+        .col
+          .card.radius-10
+            .card-body
+              .text-center
+                p.mb-0.text-secondary Sale Returns
+                //- .widgets-icons.rounded-circle.mx-auto.bg-light-secondary.text-info.my-3
+                .text-danger.ms-auto.font-35
+                  a(href='/saleReturns')
+                    i.bx.bx-lg.bx-chevrons-down
+                h5.my-1 #{ saleReturnSum } / #{ saleReturnCount }
+        .col
+          .card.radius-10
+            .card-body
+              .text-center
+                p.mb-0.text-secondary Purchase Returns
+                //- .widgets-icons.rounded-circle.mx-auto.bg-light-secondary.text-danger.my-3
+                .text-danger.ms-auto.font-35
+                  a(href='/purchaseReturns')
+                    i.bx.bx-lg.bx-chevrons-up
+                h5.my-1 #{ purchaseReturnSum } / #{ purchaseReturnCount }
+      .row
+        .col.col-lg-12
+          .row
+            .col.d-flex
+              .card.radius-10.w-100
+                .card-body
+                  .d-flex.align-items-center
+                    .mb-0.font-18 Sale Summary
+                    .ms-auto#totalSale.font-18 Total Sale:  
+                  #salesChart
+            .col.col-lg-3
+              .col
+                .card.radius-10
+                  .card-body
+                    .d-flex.align-items-center
+                      .mb-0.text-secondary Sale Discount
+                        h5.my-1 #{ discountSum } / #{ discountCount } 
+                      .text-danger.ms-auto.font-35
+                        a(href='/accounts/7/show')
+                          i.bx.bxs-discount.text-warning
+              .col
+                .card.radius-10
+                  .card-body
+                    .d-flex.align-items-center
+                      .mb-0.text-secondary Credit Sale
+                        h5.my-1 #{ cashReceiptCredit } / #{ cashReceiptCreditCount }
+                      .text-warning.ms-auto.font-35
+                        a(href='/cashReceipts/credit')
+                          i.bx.bx-credit-card-front.text-danger
+              .col
+                .card.radius-10
+                  .card-body
+                    .d-flex.align-items-center
+                      .mb-0.text-secondary Payments to Suppliers
+                        h5.my-1 #{ paymentSum } / #{ paymentCount }
+                      .text-primary.ms-auto.font-35
+                        a(href='/payments')
+                          i.bx.bx-terminal.text-info
+              .col
+                .card.radius-10
+                  .card-body
+                    .d-flex.align-items-center
+                      .mb-0.text-secondary Receipts from Customers
+                        h5.my-1 #{ receiptSum } / #{ receiptCount }
+                      .text-success.ms-auto.font-35
+                        a(href='/receipts')
+                          i.bx.bxs-terminal.text-success
+            .col.d-flex
+              .card.radius-10.w-100
+                .card-body
+                  .d-flex.align-items-center
+                    .mb-0#cashSummary.font-18 Cash Summary
+                    .dropdown.ms-auto
+                      a.dropdown-toggle.dropdown-toggle-nocaret(href='#' data-bs-toggle='dropdown')
+                        i.bx.bx-dots-horizontal-rounded.font-22.text-dark
+                      ul.dropdown-menu
+                        li
+                          a.dropdown-item(href='/receiveCounterCash') Receive Counter Cash
+                        li
+                          a.dropdown-item(href='/payCashToCounter') Pay Cash to Counter
+                        li
+                          a.dropdown-item(href='/withdrawCash') Withdraw Cash
+                  #cashChart
+        
+  script(src='/assets/js/custom/dashboards/admin-dashboard.js')

@@ -1,0 +1,215 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Cash Receipts
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Cash Receipt
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mx-4.mt-lg-0(href='/sales/create')
+              i.bx.bxs-plus-square
+              | New Sale
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/orders/create')
+              i.bx.bxs-plus-square
+              | New Order
+      // end breadcrumb
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-4    
+                  .form-body
+                    form(name='cashDetails')
+                      .border.border-3.p-3.rounded
+                        ul.nav.nav-tabs.nav-primary(role='tablist')
+                          li.nav-item(role='presentation')
+                            a.nav-link.active(data-bs-toggle='tab' href='#primaryhome' role='tab' aria-selected='true')
+                              .d-flex.align-items-center
+                                .tab-icon
+                                  i.bx.bx-home.font-18.me-1
+                                .tab-title Receipt Details
+                        .mb-3
+                          .table-responsive
+                            table.table.align-middle.mb-0
+                              thead.table-light
+                                tr
+                                  th Ref #
+                                  th.text-end Amount
+                                  th Action
+                              tbody#cashReceiptEntries
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='totalAmount') Total Amount 
+                              label#totalAmount.form-label.w-100.btn.btn-outline-info.py-2.mt-1 0.00
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='paymentMode') Payment Mode 
+                              .form-check
+                                input#cashOption.form-check-input(type='radio' name='paymentModeOptions' value='cash' checked)
+                                label.form-check-label(for='cashOption') Cash
+                              .form-check.form-check-inline
+                                input#creditOption.form-check-input(type='radio' name='paymentModeOptions' value='credit')
+                                label.form-check-label(for='creditOption') Credit
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='discount') Discount
+                              input#discount.form-control(type='number' value='0.00' step='0.01' required)
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='netTotal') Net Total
+                              input#netTotal.text-danger.form-control(type='text' value='0.00' disabled)
+                        .row#cashPanel
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='paidAmount') Received Amount
+                              input#paidAmount.form-control(type='number' value='0.00' step='0.01' required)
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='balancePaid') Balance Paid
+                              input#balancePaid.form-control(type='text' value='0.00' disabled)
+                        .row#creditPanel.visually-hidden
+                          .col
+                            .mb-3
+                              label#balance.form-label(for='customerListOptions') Customer Name
+                              input#customerName.form-control(list='customerListOptions' placeholder='Type to search...')
+                              datalist#customerListOptions
+                                each customer in customers
+                                  option(value=`${customer.name}` id=`${customer.id}`)
+                        .row
+                          .col.md-2
+                            .mb-3
+                              button.btn.btn-primary.px-5(type='submit') Save     
+                          .col.md-2
+                            .mb-3
+                              button#resetButton.btn.btn-outline-primary.px-5(type='Reset') Reset 
+                .col-lg-8
+                  .col-xl
+                    .card
+                      .card-body
+                        ul.nav.nav-tabs.nav-primary(role='tablist')
+                          li.nav-item(role='presentation')
+                            a.nav-link.active(data-bs-toggle='tab' href='#primaryhome' role='tab' aria-selected='true')
+                              .d-flex.align-items-center
+                                .tab-icon
+                                  i.bx.bx-home.font-18.me-1
+                                .tab-title Sales
+                          li.nav-item(role='presentation')
+                            a.nav-link(data-bs-toggle='tab' href='#primaryprofile' role='tab' aria-selected='false')
+                              .d-flex.align-items-center
+                                .tab-icon
+                                  i.bx.bx-user-pin.font-18.me-1
+                                .tab-title Orders
+                        .tab-content
+                          .tab-pane.fade.show.active(id='primaryhome' role='tabpanel')
+                            .table-responsive
+                              table.table.align-middle.mb-0
+                                thead.table-light
+                                  tr
+                                    th Date & Time
+                                    th Status
+                                    th.text-end Amount
+                                    th Actions
+                                tbody#pendingSales
+                                  each sale in sales
+                                    tr(id=`S-${sale.id}`)
+                                      td 
+                                        .d-flex.align-items-center
+                                          .ms-2
+                                            - let dateString = moment(sale.createdAt).format('DD-MM-YYYY');
+                                            - let timeString = moment(sale.createdAt).format('hh:mm:ss A');
+                                            h6.mb-1.font-14 #{dateString}
+                                            p.mb-0.font-13.text-secondary #{timeString}
+                                      - let amount = (sale.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                      td
+                                        .d-flex.align-items-center.text-danger
+                                          i.bx.bx-radio-circle-marked.bx-burst.bx-rotate-90.align-middle.font-18.me-1
+                                          span #{sale.status}
+                                      td.text-end #{amount}
+                                      td
+                                        .d-flex
+                                          a(href=`/sales/${sale.id}/show` title='View Sale')
+                                            i.bx.bx-sm.bx-show-alt.text-primary
+                                          a(href=`/sales/${sale.id}/edit?src=cr` title='Edit Sale')
+                                            i.bx.bx-sm.bx-pencil.text-primary
+                                          a(class='cancelSale' id=`${sale.id}` href='javascript:;' title='Cancel Sale')
+                                            i.bx.bx-sm.bx-minus-circle.text-primary
+                                          a(class='printSale' id=`${sale.id}` href='javascript:;' title='Print')
+                                            i.bx.bx-sm.bx-printer.text-primary
+                                          a(class='addSale' id=`${sale.id}` href='javascript:;' title='Add to Receipt')
+                                            i.bx.bx-sm.bx-left-arrow-circle.text-primary
+                          .tab-pane.fade(id='primaryprofile' role='tabpanel')
+                            .table-responsive
+                              table.table.align-middle.mb-0
+                                thead.table-light
+                                  tr
+                                    th Date & Time
+                                    th Status
+                                    th Delivery Method
+                                    th.text-end Rem. Amount
+                                    th Customer
+                                    th Actions
+                                tbody#pendingOrders
+                                  each order in orders
+                                    tr(id=`O-${order.id}`)
+                                      td 
+                                        .d-flex.align-items-center
+                                          .ms-2
+                                            - let dateString = moment(order.createdAt).format('DD-MM-YYYY');
+                                            - let timeString = moment(order.createdAt).format('hh:mm:ss A');
+                                            h6.mb-1.font-14 #{dateString}
+                                            p.mb-0.font-13.text-secondary #{timeString}
+                                      td
+                                        if(order.status === 'Booked')
+                                          .d-flex.align-items-center.text-danger
+                                            i.bx.bx-radio-circle-marked.bx-burst.bx-rotate-90.align-middle.font-18.me-1
+                                            span Booked
+                                        if(order.status === 'In-process')
+                                          .d-flex.align-items-center.text-primary
+                                            i.bx.bx-radio-circle-marked.bx-burst.bx-rotate-90.align-middle.font-18.me-1
+                                            span In-process
+                                        if(order.status === 'Ready')
+                                          .d-flex.align-items-center.text-success
+                                            i.bx.bx-radio-circle-marked.bx-burst.bx-rotate-90.align-middle.font-18.me-1
+                                            span Ready
+                                      td 
+                                        if(order.deliveryMethod === 'Self-collection')
+                                          .badge.rounded-pill.bg-primary Self-collection
+                                        if(order.deliveryMethod === 'Delivery Boy')
+                                          .badge.rounded-pill.bg-warning Delivery Boy
+                                        if(order.deliveryMethod === 'Food Panda')
+                                          .badge.rounded-pill.bg-danger Food Panda
+                                      - let remainingAmount = (order.remainingAmount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                      td.text-end #{remainingAmount}
+                                      td
+                                        h6.mb-0.font-14 #{order.customerName}
+                                        p.mb-0.font-13.text-secondary #{order.contactNo}
+                                      td
+                                        .d-flex.text-secondary
+                                          a(href=`/orders/${order.id}/show` title='View Order')
+                                            i.bx.bx-sm.bx-show-alt.text-primary
+                                          a(href=`/orders/${order.id}/edit?src=cr` title='Edit Order')
+                                            i.bx.bx-sm.bx-pencil.text-primary
+                                          a(href=`/orders/${order.id}/cancel?src=cr` title='Cancel Order')
+                                            i.bx.bx-sm.bx-minus-circle.text-primary
+                                          a(class='printOrder' id=`${order.id}` href='javascript:;' title='Print')
+                                            i.bx.bx-sm.bx-printer.text-primary
+                                          a(class='inProcessOrder' id=`${order.id}` href='javascript:;' title='Mark as In-process')
+                                            i.bx.bx-sm.bx-cog.text-primary
+                                          a(class='readyOrder' id=`${order.id}` href='javascript:;' title='Mark as Ready')
+                                            i.bx.bx-sm.bx-check-circle.text-primary
+                                          a(class='addOrder' id=`${order.id}` href='javascript:;' title='Add to Receipt')
+                                            i.bx.bx-sm.bx-left-arrow-circle.text-primary
+  script(src='/assets/js/custom/operations/cashReceipts/createCashReceipt.js')
+  script(src='/assets/js/custom/operations/printInvoice.js')

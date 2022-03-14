@@ -1,0 +1,51 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Orders
+        - if(user.userRole === 'sale-counter' || user.userRole === 'cash-counter')
+          .ms-auto
+              a.btn.btn-primary.me-4.mt-2.mt-lg-0(href='/sales/create')
+                i.bx.bxs-plus-square
+                | New Sale
+              a.btn.btn-primary.mt-2.mt-lg-0(href='/orders/create')
+                i.bx.bxs-plus-square
+                | New Order
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Order ID
+                      th Customer Name
+                      th Contact #
+                      th.text-end Amount
+                      th Delivery Method
+                      th Status
+                      - if(user.userRole === 'sale-counter')
+                        th Actions
+                      - if(user.userRole !== 'sale-counter')
+                        th View Order
+                        
+                  tbody
+                    each order in orders
+                      tr
+                        td #{order.id}
+                        td #{order.customerName}
+                        td #{order.contactNo}
+                        - let amount = (order.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{amount}
+                        td #{order.deliveryMethod}
+                        td #{order.status}
+                        td
+                          a.ms-2(href=`/orders/${order.id}/show` title='View Order')
+                            i.fa.fa-lg.fa-eye
+                          - if(user.userRole === 'sale-counter')
+                            a.ms-2(href=`/orders/${order.id}/edit?src=view` title='Edit Order')
+                              i.fa.fa-lg.fa-pencil

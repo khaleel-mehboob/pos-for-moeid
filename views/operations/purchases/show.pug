@@ -1,0 +1,79 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Purchases
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') View Purchase
+      // end breadcrumb
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-12
+                  .col-xl
+                    .card
+                      .card-body
+                        .form-body-child
+                          form#purchaseEntryForm
+                            .row
+                              .col-sm-2.form-group
+                                label.form-label(for='itemListOptions') Item Name
+                                input#itemName.form-control(disabled)
+                              .col-sm-2.form-group
+                                label.form-label(for='rate') Rate
+                                input#rate.form-control(disabled)
+                              .col-sm-2.form-group
+                                label.form-label(for='qty') Qty
+                                input#qty.form-control(disabled)
+                              .col-sm-2.form-group
+                                label.form-label(for='totalAmount') Total Amount
+                                br
+                                - let amount = (purchase.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                input#totalAmount.form-control(disabled value=`${amount}`) 
+                      .card-body
+                        .table-responsive
+                          table.table.align-middle.mb-0
+                            thead.table-light
+                              tr
+                                th Ser
+                                th Item Name
+                                th.text-end Rate
+                                th.text-end Qty
+                                th.text-end Amount
+                            tbody#purchaseEntries
+                              - let i = 0
+                              each purchaseEntry in purchase.purchaseEntries
+                                tr
+                                  td #{++i}
+                                  td #{purchaseEntry.item.name}
+                                  - let rate = (purchaseEntry.rate * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                  td.text-end #{rate}
+                                  - let qty = (purchaseEntry.qty * 1).toFixed(3).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                  td.text-end #{qty}
+                                  - let subTotal = purchaseEntry.rate * purchaseEntry.qty;
+                                  - subTotal = subTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                  td.text-end #{subTotal}
+              .row
+                .col-lg-12
+                  .col-xl
+                    .card
+                      .card-body
+                        .form-body    
+                          form.row
+                            .col-sm-4.form-group
+                                label.form-label(for='supplierName') Supplier Name
+                                input#supplierName.form-control(disabled value=`${purchase.supplier.name}`)
+                            .col-sm-2.form-group
+                              br
+                              button.mt-2.btn.btn-primary.px-5(type='submit') Back
+  script(src='/assets/js/custom/operations/purchases/showPurchase.js')

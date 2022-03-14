@@ -1,0 +1,41 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Customers
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Customer
+      // end breadcrumb
+      .row
+        .col-xl-7.mx-auto
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-5
+              .form-body
+                form
+                  .row.g-3
+                    .col-md-6.form-group
+                      label.form-label(for='customerName') Customer Name
+                      input#customerName.form-control(type='text' required)
+                    .col-md-6.form-group
+                      label.form-label(for='contactNo') Contact # (0XXX-XXXXXXX)
+                      input#contactNo.form-control(type='text' maxlength='12' required)
+                  .row.g-3.mt-2
+                    .col-md-6.form-group
+                      label.form-label(for='address') Address
+                      input#address.form-control(type='text' required)
+                    .col-md-6.form-group
+                      label.form-label(for='openingBalance') Opening Balance
+                      input#openingBalance.form-control(type='number' step='0.01' required)
+                  .row.g-3.mt-2
+                    .col-12.form-group
+                      button.btn.btn-primary.px-5(type='submit') Save
+                      button#backButton.btn.btn-outline-primary.ms-4.px-5(type='button') Back
+  script(src='/assets/js/custom/bizObjects/customers/createCustomer.js')

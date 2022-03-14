@@ -1,0 +1,54 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Items
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Item
+      // end breadcrumb
+      .row
+        .col-xl-7.mx-auto
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-5
+              .form-body
+                form.row.g-3
+                  .col-md-6.form-group
+                    label.form-label(for='itemName') Item Name
+                    input#itemName.form-control(type='text' required)
+                  .col-md-6.form-group
+                    label.form-label(for='barcode') Barcode
+                    input#barcode.form-control(type='text')
+                  .row.g-3.mt-2
+                    .col-md-6.form-group
+                      label.form-label(for='unit') Unit
+                      select#unit.form-select(required)
+                        option(value='' selected disabled hidden) Select Unit ...
+                        option(value='Unit') Unit
+                        option(value='KGs') KGs  
+                    .col-md-6.form-group
+                      label.form-label(for='department') Department
+                      select#department.form-select(required)
+                        option(value='' selected disabled hidden) Select Department ...
+                        each department in departments
+                          option(value=`${department.id}`) #{department.title}
+                  .row.g-3.mt-2
+                    .col-md-6.form-group
+                      label.form-label(for='category') Categories
+                      select#category.form-select(required)
+                        option(value='' selected disabled hidden) Select Category ...
+                    .col-md-6.form-group
+                      label.form-label(for='price') Sales Price
+                      input#price.form-control(type='number' step='0.01' required)
+                    .col-12
+                      button.btn.btn-primary.px-5(type='submit') Save
+                      button#backButton.btn.btn-outline-primary.ms-4.px-5(type='button') Back
+  script(src='/assets/js/custom/bizObjects/categories/filterCategories.js')
+  script(src='/assets/js/custom/bizObjects/items/createItem.js')

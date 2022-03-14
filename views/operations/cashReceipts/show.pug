@@ -1,0 +1,146 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Cash Receipts
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Cash Receipt
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mx-4.mt-lg-0(href='/sales/create')
+              i.bx.bxs-plus-square
+              | New Sale
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/orders/create')
+              i.bx.bxs-plus-square
+              | New Order
+      // end breadcrumb
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-4    
+                  .form-body
+                    form
+                      .border.border-3.p-3.rounded
+                        .table-responsive
+                          table.table.align-middle.mb-4
+                            thead.table-light
+                              tr
+                                th Ref #
+                                th Amount
+                            tbody#cashReceiptEntries
+                              each cashReceiptEntry in cashReceipt.cashReceiptEntries
+                                tr
+                                - let id
+                                - if(cashReceiptEntry.saleId) id = `S-${cashReceiptEntry.saleId}`
+                                - if(cashReceiptEntry.orderId) id = `O-${cashReceiptEntry.orderId}`
+                                - if(cashReceiptEntry.saleId)
+                                  td 
+                                    a(href=`/sales/${cashReceiptEntry.saleId}/show`) #{id}
+                                - if(cashReceiptEntry.orderId)
+                                  td 
+                                    a(href=`/orders/${cashReceiptEntry.orderId}/show`) #{id}
+                                - let amount = (cashReceiptEntry.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                                td #{amount}
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='totalAmount') Total Amount 
+                              label#totalAmount.form-label.w-100.btn.btn-outline-info.py-2.mt-1 #{ cashReceipt.totalAmount }
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='paymentMode') Payment Mode 
+                              - if(cashReceipt.paymentMode === 'Cash')
+                                .form-check
+                                    input#cashOption.form-check-input(type='radio' name='paymentModeOptions' value='cash' checked disabled)
+                                    label.form-check-label(for='cashOption') Cash
+                                .form-check.form-check-inline
+                                  input#creditOption.form-check-input(type='radio' name='paymentModeOptions' value='credit' disabled)
+                                  label.form-check-label(for='creditOption') Credit
+                              - if(cashReceipt.paymentMode === 'Credit')
+                                .form-check
+                                    input#cashOption.form-check-input(type='radio' name='paymentModeOptions' value='cash' disabled)
+                                    label.form-check-label(for='cashOption') Cash
+                                .form-check.form-check-inline
+                                  input#creditOption.form-check-input(type='radio' name='paymentModeOptions' value='credit' checked disabled)
+                                  label.form-check-label(for='creditOption') Credit
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='discount') Discount
+                              input#discount.form-control(type='number' value=`${cashReceipt.discount}` step='0.01' disabled)
+                          .col.md-2
+                            .mb-3
+                              label.form-label(for='netTotal') Net Total
+                              input#netTotal.text-danger.form-control(type='text' value=`${cashReceipt.netTotal}` disabled)
+                        - if(cashReceipt.paymentMode === 'Cash')
+                          .row#cashPanel
+                            .col.md-2
+                              .mb-3
+                                label.form-label(for='paidAmount') Received Amount
+                                input#paidAmount.form-control(type='number' value=`${cashReceipt.paidAmount}` step='0.01' disabled)
+                            .col.md-2
+                              .mb-3
+                                label.form-label(for='balancePaid') Balance Paid
+                                input#balancePaid.form-control(type='text' value=`${cashReceipt.balancePaid}` disabled)
+                        - if(cashReceipt.paymentMode === 'Credit')
+                          .row#creditPanel
+                            .col
+                              .mb-3
+                                label#balance.form-label(for='customerListOptions') Customer Name
+                                - if(customer)
+                                  input#customerName.form-control(value=`${customer.name}` disabled)
+                        .row
+                          .col.md-2
+                            .mb-3
+                              button.btn.btn-primary.px-5(type='submit') Back
+                .col-lg-8
+                  .col-xl
+                    .card
+                      .card-body
+                        ul.nav.nav-tabs.nav-primary(role='tablist')
+                          li.nav-item(role='presentation')
+                            a.nav-link.active(data-bs-toggle='tab' href='#primaryhome' role='tab' aria-selected='true')
+                              .d-flex.align-items-center
+                                .tab-icon
+                                  i.bx.bx-home.font-18.me-1
+                                .tab-title Sales
+                          li.nav-item(role='presentation')
+                            a.nav-link(data-bs-toggle='tab' href='#primaryprofile' role='tab' aria-selected='false')
+                              .d-flex.align-items-center
+                                .tab-icon
+                                  i.bx.bx-user-pin.font-18.me-1
+                                .tab-title Orders
+                        .tab-content.py-3
+                          .tab-pane.fade.show.active(id='primaryhome' role='tabpanel')
+                            .table-responsive
+                              table.table.align-middle.mb-0
+                                thead.table-light
+                                  tr
+                                    th Sale Id
+                                    th Amount
+                                    th Status
+                                    th Action
+                                tbody#pendingSales
+                          .tab-pane.fade(id='primaryprofile' role='tabpanel')
+                            .table-responsive
+                              table.table.align-middle.mb-0
+                                thead.table-light
+                                  tr
+                                    th Order Id
+                                    th Customer
+                                    th Rem. Amount
+                                    th Delivery Method
+                                    th Status
+                                    th Action
+                                tbody#pendingOrders
+    script(src='/assets/js/custom/operations/cashReceipts/showCashReceipt.js')

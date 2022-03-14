@@ -1,0 +1,36 @@
+// navigation
+ul#menu.metismenu
+  li
+    a(href='/dashboard')
+      .parent-icon
+        i.bx.bx-tachometer
+      .menu-title Dashboard
+  li
+    a.has-arrow(href='javascript:;')
+      .parent-icon
+        i.bx.bx-grid-alt
+      .menu-title View All BO 
+    ul
+      li
+        a(href='/categories')
+          i.bx.bx-right-arrow-alt
+          | Categories
+      li
+        a(href='/items')
+          i.bx.bx-right-arrow-alt
+          | Items
+  li
+    a.has-arrow(href='javascript:;')
+      .parent-icon
+        i.bx.bx-recycle
+      .menu-title View All Ops
+    ul
+      li
+        a(href='/orders')
+          i.bx.bx-right-arrow-alt
+          | Orders
+      li
+        a(href='/sales')
+          i.bx.bx-right-arrow-alt
+          | Sales
+// end navigation

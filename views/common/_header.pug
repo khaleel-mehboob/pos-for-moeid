@@ -1,0 +1,21 @@
+// start header
+header
+  .topbar.d-flex.align-items-center
+    nav.navbar.navbar-expand
+      .mobile-toggle-menu
+        i.bx.bx-menu
+      h3.text-success= clientName
+      .top-menu.ms-auto
+      // Placeholder
+      .user-box.dropdown
+        a.d-flex.align-items-center.nav-link.dropdown-toggle.dropdown-toggle-nocaret(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+          img.user-img(src='/assets/images/avatars/avatar-1.png' alt='user avatar')
+          .user-info.ps-3
+            p.user-name.mb-0 #{user.username.toUpperCase()} 
+            p.designattion.mb-0= user.userRole.toUpperCase()
+        ul.dropdown-menu.dropdown-menu-end
+          li
+            a.dropdown-item(href='javascript:;')
+              i.bx.bx-log-out-circle
+              span#logout Logout
+// end header

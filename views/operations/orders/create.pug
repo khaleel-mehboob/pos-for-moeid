@@ -1,0 +1,102 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Orders
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Order
+      // end breadcrumb
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-4
+                  .form-body
+                    form
+                      .border.border-3.p-4.rounded
+                        .mb-3
+                          label.form-label(for='deliveryMethod') Delivery Method
+                          select#deliveryMethod.form-select(required)
+                            option(value='' selected hidden disabled) Select Delivery Method ...
+                            option(value='Self-collection') Self-collection
+                            option(value='Delivery Boy') Delivery Boy
+                            option(value='Food Panda') Food Panda
+                        .mb-3
+                          label.form-label(for='customerName') Customer Name
+                          input#customerName.form-control(type='text' required)
+                        .mb-3
+                          label.form-label(for='contactNo') Contact Number
+                          input#contactNo.form-control(type='text' maxlength='12' required)
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.py-2.form-label(for='totalAmount') Total Amount 
+                          .col.md-2
+                            .mb-3
+                              label#totalAmount.py-2.text-danger.form-label.w-100.btn.btn-outline-secondary.px-3 0.00
+                        .row
+                          .col.md-2.mb-3
+                            - if(user.userRole === 'sale-counter')
+                              label.form-label(for='advancePayment') Advance Payment
+                              input#advancePayment.form-control(type='number' value='0.00' step='0.01' disabled)
+                            - if(user.userRole !== 'sale-counter')
+                              label.form-label(for='advancePayment') Advance Payment
+                              input#advancePayment.form-control(type='number' value='0.00' step='0.01')
+                          .col.md-2.mb-3
+                            label.form-label(for='remainingAmount') Rem. Amount 
+                            input#remainingAmount.form-control(type='text' value='0.00' step='0.01' disabled)
+                        .mb-3
+                          label.form-label(for='remarks') Remarks
+                          textarea#remarks.form-control(rows='2')
+                        .row
+                          .col.md-2
+                            .mb-3
+                              button.btn.btn-primary.px-5(type='submit') Save     
+                          .col.md-2
+                            .mb-3
+                              button#resetButton.btn.btn-outline-primary.px-5(type='Reset') Reset
+                .col-lg-8
+                  .col-xl
+                    .card
+                      .card-body
+                        .form-body-child
+                          form#orderEntryForm
+                            .row
+                              .col-sm-3.form-group
+                                label.form-label(for='itemListOptions') Select Item
+                                input#itemName.form-control(list='itemListOptions' placeholder='Type to search...' required)
+                                datalist#itemListOptions
+                                  each item in items
+                                    option(value=`${item.name}` id=`${item.id}-${item.price}`)
+                              .col-sm-3.form-group
+                                label.form-label(for='rate') Rate
+                                input#rate.form-control(type='number' value='0.00' step='0.01' required)
+                              .col-sm-3.form-group
+                                label#qtyLabel.form-label(for='qty') Qty
+                                input#qty.form-control(type='number' value='0.00' step='0.001' required)
+                              .col-sm-3.form-group.align-bottom
+                                br
+                                button.btn.btn-outline-primary.px-5.mt-2(type='submit') Add
+                      .card-body
+                        .table-responsive
+                          table.table.align-middle.mb-0
+                            thead.table-light
+                              tr
+                                th Ser.#
+                                th Item Name
+                                th.text-end Rate
+                                th.text-end Qty
+                                th.text-end Amount
+                                th Action
+                            tbody#orderEntries
+  script(src='/assets/js/custom/operations/orders/createOrder.js')
+  script(src='/assets/js/custom/operations/printInvoice.js')

@@ -1,0 +1,21 @@
+// sidebar wrapper
+.sidebar-wrapper(data-simplebar='true')
+  .sidebar-header
+    div
+      img.logo-icon(src='/assets/images/logo-icon.png' alt='logo icon')
+    div
+      h5.logo-text= appName
+    .toggle-icon.ms-auto
+      i.bx.bx-arrow-to-left
+  // navigation
+  if user.userRole === 'super-admin'
+    include menus/_saMenu
+  else
+    if user.userRole === 'admin'
+      include menus/_adminMenu
+    else
+      if user.userRole === 'cash-counter'
+        include menus/_ccMenu
+      else
+        if user.userRole === 'sale-counter'
+          include menus/_scMenu

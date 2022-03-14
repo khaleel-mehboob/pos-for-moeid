@@ -1,0 +1,24 @@
+extends ../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3.border-0 Withdraw Cash
+      // end breadcrumb
+      .row
+        .col-xl-7.mx-auto
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-5
+              .form-body
+                form
+                  .row.g-3
+                    .col-md-6.form-group
+                      label.form-label(for='amount') Amount
+                      input#amount.form-control(type='number' value='0.00' step='0.01' required)
+                  .row.g-3.mt-2
+                    .col-12.form-group
+                      button.btn.btn-primary.px-5(type='submit') Withdraw Cash
+                      button#backButton.btn.btn-outline-primary.ms-4.px-5(type='button') Back
+  script(src='/assets/js/custom/dashboards/withdrawCash.js')

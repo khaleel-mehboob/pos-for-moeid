@@ -1,0 +1,72 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Items
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Edit Item
+      // end breadcrumb
+      .row
+        .col-xl-7.mx-auto
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-5
+              .form-body
+                form.row.g-3
+                  .col-md-6.form-group
+                    label.form-label(for='itemName') Item Name
+                    input#itemId.form-control(type='text' hidden value=`${item.id}`)
+                    input#itemName.form-control(type='text' required value=`${item.name}`) 
+                  .col-md-6.form-group
+                    label.form-label(for='barcode') Barcode
+                    - if(item.barcode)
+                      input#barcode.form-control(type='text' value=`${item.barcode}`)
+                    -if(!item.barcode)  
+                      input#barcode.form-control(type='text')
+                  .row.g-3.mt-2
+                    .col-md-6.form-group
+                      label.form-label(for='unit') Unit
+                      select#unit.form-select(required)
+                        option(value='' disabled hidden) Select Unit ...
+                        if(item.unit === 'Unit')
+                          option(value='Unit' selected) Unit
+                        else
+                          option(value='Unit') Unit
+                        if (item.unit === 'KGs')
+                          option(value='KGs' selected) KGs
+                        else
+                          option(value='KGs') KGs  
+                    .col-md-6.form-group
+                      label.form-label(for='department') Department
+                      select#department.form-select(required)
+                        option(value='' disabled hidden) Select Department ...
+                        each department in departments
+                          if(item.department.id === department.id)
+                            option(value=`${department.id}` selected) #{department.title}
+                          else 
+                            option(value=`${department.id}`) #{department.title}
+                  .row.g-3.mt-2
+                    .col-md-6.form-group
+                      label.form-label(for='category') Categories
+                      select#category.form-select(required)
+                        option(value='' selected disabled hidden) Select Category ...
+                        each category in categories
+                          if(item.category.id === category.id)
+                            option(value=`${category.id}` selected) #{category.name}
+                          else 
+                            option(value=`${category.id}`) #{category.name}
+                    .col-md-6.form-group
+                      label.form-label(for='price') Sales Price
+                      input#price.form-control(type='number' step='0.01' required value=`${item.price}`)
+                    .col-12
+                      button.btn.btn-primary.px-5(type='submit') Update
+                      button#backButton.btn.btn-outline-primary.ms-4.px-5(type='button') Back
+  script(src='/assets/js/custom/bizObjects/categories/filterCategories.js')
+  script(src='/assets/js/custom/bizObjects/items/updateItem.js')

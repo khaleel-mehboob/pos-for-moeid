@@ -1,0 +1,94 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Orders
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Cancel Order
+      // end breadcrumb
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-4
+                  .form-body
+                    form
+                      .border.border-3.p-4.rounded
+                        .mb-3
+                          label.form-label(for='deliveryMethod') Delivery Method
+                          select#deliveryMethod.form-select(disabled)
+                            option(value=`${order.deliveryMethod}`) #{order.deliveryMethod}
+                        .mb-3
+                          label.form-label(for='customerName') Customer Name
+                          input#customerName.form-control(disabled value=`${order.customerName}`)
+                        .mb-3
+                          label.form-label(for='contactNo') Contact Number
+                          input#contactNo.form-control(disabled value=`${order.contactNo}`)
+                        .row
+                          .col.md-2
+                            .mb-3
+                              label.py-2.form-label(for='totalAmount') Total Amount 
+                          .col.md-2
+                            .mb-3
+                              - let totalAmount = (order.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                              label#totalAmount.py-2.text-danger.form-label.w-100.btn.btn-outline-secondary.px-3 #{totalAmount}
+                        .row
+                          .col.md-2.mb-3
+                            label.form-label(for='advancePayment') Advance Payment
+                            input#advancePayment.form-control(disabled value=`${order.advancePayment}`)
+                          .col.md-2.mb-3
+                            label.form-label(for='remainingAmount') Rem. Amount 
+                            input#remainingAmount.form-control(disabled value=`${order.remainingAmount}`)
+                        .mb-3
+                          label.form-label(for='remarks') Remarks
+                          textarea#remarks.form-control(rows='2' disabled) #{order.remarks}
+                        .row
+                          .col.md-2.mb-3
+                            button.btn.btn-primary.px-3(type='submit' id=`${order.id}`) Cancel Order
+                          .col.md-2.mb-3
+                            button#backButton.btn.btn-primary.px-5(type='button') Back
+                .col-lg-8
+                  .col-xl
+                    .card
+                      .card-body
+                        .form-body-child
+                          form#orderEntryForm
+                            .row
+                              .col-sm-3.form-group
+                                label.form-label(for='itemListOptions') Item Name
+                                input#itemName.form-control(disabled)
+                              .col-sm-3.form-group
+                                label.form-label(for='rate') Rate
+                                input#rate.form-control(disabled)
+                              .col-sm-3.form-group
+                                label.form-label(for='qty') Qty
+                                input#qty.form-control(disabled)
+                      .card-body
+                        .table-responsive
+                          table.table.align-middle.mb-0
+                            thead.table-light
+                              tr
+                                th Ser
+                                th Item Name
+                                th Rate
+                                th Qty
+                                th Amount
+                            tbody#orderEntries
+                              - let i = 0
+                              each orderEntry in order.orderEntries
+                                tr
+                                  td #{++i}
+                                  td #{orderEntry.item.name}
+                                  td #{orderEntry.rate}
+                                  td #{orderEntry.qty}
+                                  td #{orderEntry.rate * orderEntry.qty}
+  script(src='/assets/js/custom/operations/orders/cancelOrder.js')

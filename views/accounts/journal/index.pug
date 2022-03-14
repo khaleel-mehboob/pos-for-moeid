@@ -1,0 +1,46 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase General Journal
+        .ms-auto
+          a.btn.btn-primary.mt-2.mt-lg-0(href='/journal/create')
+            i.bx.bxs-plus-square
+            | Record Entry
+      
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Date & Time
+                      th Entry Type
+                      th Narration
+                      th.text-end Amount
+                      th Actions
+                  tbody
+                    - let i = 0
+                    each journalEntry in journalEntries
+                      tr
+                        td= ++i
+                        td 
+                          .d-flex.align-items-center
+                            .ms-2
+                              - let dateString = moment(journalEntry.createdAt).format('DD-MM-YYYY');
+                              - let timeString = moment(journalEntry.createdAt).format('hh:mm:ss A');
+                              h6.mb-1.font-14 #{dateString}
+                              p.mb-0.font-13.text-secondary #{timeString}
+                        td #{journalEntry.entryType}
+                        td #{journalEntry.narration}
+                        - let amount = (journalEntry.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{amount}
+                        td
+                          a(href=`/journal/${journalEntry.id}/show` title='View Journal Entry') 
+                            i.fa.fa-lg.fa-eye

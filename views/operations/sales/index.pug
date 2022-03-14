@@ -1,0 +1,52 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Sales
+        - if(user.userRole === 'sale-counter' || user.userRole === 'cash-counter')
+          .ms-auto
+              a.btn.btn-primary.me-4.mt-2.mt-lg-0(href='/sales/create')
+                i.bx.bxs-plus-square
+                | New Sale
+              a.btn.btn-primary.mt-2.mt-lg-0(href='/orders/create')
+                i.bx.bxs-plus-square
+                | New Order
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Sale ID
+                      th Date & Time
+                      th Status
+                      th.text-end Amount
+                      - if(user.userRole === 'sale-counter')
+                        th Actions
+                      - if(user.userRole !== 'sale-counter')
+                        th View Sale
+                  tbody
+                    each sale in sales
+                      tr
+                        td #{sale.id}
+                        td 
+                          .d-flex.align-items-center
+                            .ms-2
+                              - let dateString = moment(sale.createdAt).format('DD-MM-YYYY');
+                              - let timeString = moment(sale.createdAt).format('hh:mm:ss A');
+                              h6.mb-1.font-14 #{dateString}
+                              p.mb-0.font-13.text-secondary #{timeString}
+                        - let amount = (sale.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td #{sale.status}
+                        td.text-end #{amount}
+                        td
+                          a.ms-2(href=`/sales/${sale.id}/show` title='View Sale') 
+                            i.fa.fa-lg.fa-eye
+                          - if(user.userRole === 'sale-counter')
+                            a.ms-2(href=`/sales/${sale.id}/edit?src=view` title='Edit Sale')
+                              i.fa.fa-lg.fa-pencil

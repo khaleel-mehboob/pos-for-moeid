@@ -1,0 +1,54 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Payments
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/payments/create')
+              i.bx.bxs-plus-square
+              | Create Payment
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Date & Time
+                      th Amount
+                      th Supplier Name
+                  tbody
+                    - let i = 0
+                    each payment in payments
+                      tr
+                        td= ++i
+                        td 
+                          .d-flex.align-items-center
+                            .ms-2
+                              - let dateString = moment(payment.createdAt).format('DD-MM-YYYY');
+                              - let timeString = moment(payment.createdAt).format('hh:mm:ss A');
+                              h6.mb-1.font-14 #{dateString}
+                              p.mb-0.font-13.text-secondary #{timeString}
+                        - let amount = (payment.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td
+                          .d-flex.align-items-center
+                            .ms-2
+                              h6.mb-1.font-14 #{amount}
+                              p.mb-0.text-primary
+                                  a(href=`payments/${payment.id}/show` title='View Payment')
+                                    i.fa.fa-sm.fa-eye
+                                    span.ms-2 View Payment
+                        td
+                          .d-flex.align-items-center
+                            .ms-2
+                              h6.mb-1.font-14 #{payment.supplier.name}
+                              p.mb-0.text-primary
+                                  a(href=`/accounts/${payment.supplier.account.id}/show` title='View Account Ledger')
+                                    i.fa.fa-sm.fa-eye
+                                    span.ms-2 View Account

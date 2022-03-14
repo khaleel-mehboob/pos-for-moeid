@@ -1,0 +1,52 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Items
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/items/create')
+              i.bx.bxs-plus-square
+              | New Item
+      .row
+        .col-12
+          .card             
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Item Name
+                      th Unit
+                      th Department
+                      th Category
+                      th Sales Price
+                      - if(user.userRole === 'cash-counter')
+                        th Actions
+                      - if(user.userRole === 'admin' || user.userRole === 'super-admin')
+                        th View Stock Ledger
+                  tbody#items
+                    - let i = 0
+                    each item in items
+                      tr
+                        td= ++i
+                        td #{item.barcode} #{item.name}
+                        td #{item.unit}
+                        td #{item.department.title}
+                        td #{item.category.name}
+                        td #{item.price}
+                        - if(user.userRole === 'cash-counter')
+                          td
+                            a.ms-2(href=`/items/${item.id}/edit` title='Edit Item') 
+                              i.fa.fa-lg.fa-pencil
+                            a.ms-2(href=`/stockLedgers/${item.stockLedger.id}/show` title='View Stock Ledger') 
+                              i.fa.fa-lg.fa-layer-group
+                        - if(user.userRole === 'admin' || user.userRole === 'super-admin')
+                          td
+                            a.ms-2(href=`/stockLedgers/${item.stockLedger.id}/show` title='View Stock Ledger') 
+                              i.fa.fa-lg.fa-layer-group
+  //- script(src='/assets/js/custom/bizObjects/items/filterItems.js')

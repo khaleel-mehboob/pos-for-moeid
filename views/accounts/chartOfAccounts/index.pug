@@ -1,0 +1,51 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Chart Of Accounts
+        - if(user.userRole === 'super-admin')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/coa/create')
+              i.bx.bxs-plus-square
+              | Create Account
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Account Title
+                      th Account Group
+                      th Account Head
+                      th Sub-Head
+                      th.text-end Balance
+                      th View Ledger
+                  tbody#accounts
+                    - let i = 0
+                    each account in accounts
+                      tr
+                        td= ++i
+                        td #{account.title}
+                        td #{account.accountGroup}
+                        - 
+                        - if (account.accountHead)
+                          td #{account.accountHead.title}
+                        - else 
+                          td -
+                  
+                        - if (account.accountSubHead) 
+                          td #{account.accountSubHead.title}
+                        - else
+                          td -
+
+                        - let balance = (account.balance * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{ balance + ' ' + account.balanceType.substring(0, 1)}
+                        td
+                          a(href=`/accounts/${account.id}/show` title='View Account Ledger') 
+                            i.fa.fa-lg.fa-layer-group

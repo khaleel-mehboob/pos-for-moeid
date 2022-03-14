@@ -1,0 +1,45 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Customers
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/customers/create')
+              i.bx.bxs-plus-square
+              | New Customer
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Customer Name
+                      th Contact #
+                      th Address
+                      th Balance
+                      th Actions
+                  tbody
+                    - let i = 0
+                    each customer in customers
+                      tr
+                        td= ++i
+                        td #{customer.name}
+                        td #{customer.contactNo}
+                        td #{customer.address}
+                        - let balance = (customer.account.balance * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td #{balance + ' ' + customer.account.balanceType.substring(0, 1)}
+                        td
+                          a.ms-2(href=`/customers/${customer.id}/show` title='View Customer') 
+                            i.fa.fa-lg.fa-eye
+                          - if(user.userRole === 'cash-counter')
+                            a.ms-2(href=`/customers/${customer.id}/edit` title='Update Customer') 
+                              i.fa.fa-lg.fa-pencil
+                          a.ms-2(href=`/accounts/${customer.account.id}/show` title='View Account Ledger') 
+                            i.fa.fa-lg.fa-layer-group

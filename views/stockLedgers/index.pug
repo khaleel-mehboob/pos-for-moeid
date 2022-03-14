@@ -1,0 +1,61 @@
+extends ../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        - let totalStockValue = (stockValue * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        h6.mb-0.text-uppercase Total Stock Value (#{totalStockValue})
+        .ms-auto
+          - if(user.userRole === 'cash-counter')
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/items/create')
+              i.bx.bxs-plus-square
+              | New Item
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser.#
+                      th Item Name
+                      th Category
+                      th Department
+                      th Unit
+                      th.text-end Sales Price
+                      th.text-end Cost Price
+                      th.text-end Current Qty
+                      th.text-end Stock Value
+                      - if(user.userRole === 'cash-counter')
+                        th Actions
+                      - if(user.userRole !== 'cash-counter')
+                        th Item History
+                  tbody#stockLedgers
+                    - let i = 0
+                    each stockLedger in stockLedgers
+                      tr
+                        td= ++i
+                        td #{stockLedger.item.barcode} #{stockLedger.item.name}
+                        td #{stockLedger.category.name}
+                        td #{stockLedger.department.title}
+                        td #{stockLedger.item.unit}
+                        td.text-end #{stockLedger.item.price}
+                        - let movingAverage = (stockLedger.movingAverage * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{ movingAverage }
+                        td.text-end #{stockLedger.currentQty}
+                        - let entryStockValue = (stockLedger.stockValue * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{entryStockValue}
+                        - if(user.userRole === 'cash-counter')
+                          td
+                            a(href=`/stockLedgers/${stockLedger.id}/edit` title='Edit Stock Ledger') 
+                              i.fa.fa-lg.fa-pencil
+                            a(href=`/stockLedgers/${stockLedger.id}/show` title='View Stock Ledger') 
+                              i.fa.fa-lg.fa-layer-group
+                        - if(user.userRole !== 'cash-counter')
+                          td
+                            a(href=`/stockLedgers/${stockLedger.id}/show` title='View Stock Ledger') 
+                              i.fa.fa-lg.fa-layer-group
+  //- script(src='/assets/js/custom/stockLedgers/filterStockLedgers.js')

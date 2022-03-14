@@ -1,0 +1,47 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Categories
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/categories/create')
+              i.bx.bxs-plus-square
+              | New Category
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser
+                      th Category Name
+                      th Department
+                      th Item Types
+                      - if(user.userRole === 'cash-counter')
+                        th Actions
+                      - if(user.userRole === 'admin' || user.userRole === 'super-admin')
+                        th View Items
+                  tbody#categories
+                    - let i = 0
+                    each category in categories
+                      tr
+                        td= ++i
+                        td #{category.name}
+                        td #{category.department.title}
+                        td #{category.items.length}
+                        - if(user.userRole === 'cash-counter')
+                          td
+                            a.ms-2(href=`/categories/${category.id}/items` title='View Items') 
+                              i.fa.fa-lg.fa-layer-group
+                            a.ms-2(href=`/categories/${category.id}/edit` title='Edit Category') 
+                              i.fa.fa-lg.fa-pencil
+                        - if(user.userRole === 'admin' || user.userRole === 'super-admin')
+                          td
+                            a.ms-2(href=`/categories/${category.id}/items` title='View Items') 
+                              i.fa.fa-lg.fa-layer-group

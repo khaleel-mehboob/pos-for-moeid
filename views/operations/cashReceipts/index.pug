@@ -1,0 +1,52 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Cash Receipts
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/cashReceipts/create')
+              i.bx.bxs-plus-square
+              | New Cash Receipt
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser.#
+                      th Date & Time
+                      th.text-end Total Amount
+                      th.text-end Discount
+                      th.text-end Net Total
+                      th Payment Mode
+                      th Actions
+                  tbody
+                    - let i = 0
+                    each cashReceipt in cashReceipts
+                      tr
+                        td= ++i
+                        td
+                          .d-flex.align-items-center
+                            .ms-2
+                              - let dateString = moment(cashReceipt.createdAt).format('DD-MM-YYYY');
+                              - let timeString = moment(cashReceipt.createdAt).format('hh:mm:ss A');
+                              h6.mb-1.font-14 #{dateString + ' ' + timeString}
+                        - let totalAmount = (cashReceipt.totalAmount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{totalAmount}
+                        - let discount = (cashReceipt.discount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{discount}
+                        - let netTotal = (cashReceipt.netTotal * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td.text-end #{netTotal}
+                        td #{cashReceipt.paymentMode}
+                        td
+                          a.ms-2(href=`/cashReceipts/${cashReceipt.id}/show` title='View Details') 
+                            i.bx.bx-sm.bx-show-alt.text-primary
+                          a.ms-2(class='printCashReceipt' id=`${cashReceipt.id}` href='javascript:;' title='Print')
+                            i.bx.bx-sm.bx-printer.text-primary
+  script(src='/assets/js/custom/operations/printInvoice.js')

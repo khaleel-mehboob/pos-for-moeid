@@ -1,0 +1,77 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        .breadcrumb-title.pe-3 Sales
+        .ps-3
+          nav(aria-label='breadcrumb')
+            ol.breadcrumb.mb-0.p-0
+              li.breadcrumb-item
+                a(href='javascript:;')
+                  i.bx.bx-home-alt
+              li.breadcrumb-item.active(aria-current='page') Add New Sale
+        // end breadcrumb
+        - if(user.userRole === 'sale-counter')
+          .ms-auto
+              a.btn.btn-primary.mt-2.mt-lg-0(href='/orders/create')
+                i.bx.bxs-plus-square
+                | New Order
+      .row
+        .col-xl-12.mx-auto 
+          .card.border-top.border-0.border-4.border-primary
+            .card-body.p-4
+              .row
+                .col-lg-12
+                  .col-xl
+                    .card
+                      .card-body
+                        .form-body-child
+                          form#saleEntryForm
+                            .row
+                              .col-sm-1.form-group
+                                label.form-label(for='barcode') Barcode
+                                input#barcode.form-control(type='text')
+                              .col-sm-3.form-group
+                                label.form-label(for='itemListOptions') Select Item
+                                input#itemName.form-control(list='itemListOptions' placeholder='Type to search...' required)
+                                datalist#itemListOptions
+                                  each item in items
+                                    option(value=`${item.name}` id=`${item.id}-${item.barcode}-${item.price}`)
+                              .col-sm-2.form-group
+                                label.form-label(for='rate') Rate
+                                input#rate.form-control(type='number' value='0.00' step='0.01' required)
+                              .col-sm-2.form-group#qtyBlock
+                                .col-sm-12.form-group
+                                  label#qtyLabel.form-label(for='qty') Qty
+                                  input#qty.form-control(type='number' value='0.00' step='0.01' required)
+                              .col-sm-2.form-group
+                                label.form-label(for='totalAmount') Total Amount
+                                br
+                                input#totalAmount.text-danger.form-control(value='0.00' disabled) 
+                                //- label#totalAmount.form-label 0.00
+                              .col-sm-2.form-group.align-bottom
+                                br
+                                button.btn.btn-outline-primary.px-5.mt-2(type='submit') Add
+                      .card-body
+                        .table-responsive
+                          table.table.align-middle.mb-0
+                            thead.table-light
+                              tr
+                                th Ser.#
+                                th Item Name
+                                th.text-end Rate
+                                th.text-end Qty
+                                th.text-end Amount
+                                th Action
+                            tbody#saleEntries
+                    form.form-body
+                      .row
+                          .col
+                            .mb-3
+                              button.btn.btn-primary.px-5(type='submit') Save     
+                              button#resetButton.btn.btn-outline-primary.ms-4.px-5(type='Reset') Reset 
+  script(src='/assets/js/custom/operations/sales/createSale.js')
+  script(src='/assets/js/custom/operations/printInvoice.js')

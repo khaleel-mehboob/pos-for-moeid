@@ -1,0 +1,42 @@
+extends ../../common/base
+
+block content
+  // start page wrapper
+  .page-wrapper
+    .page-content
+      .page-breadcrumb.d-none.d-sm-flex.align-items-center.mb-3
+        h6.mb-0.text-uppercase Sale Returns
+        - if(user.userRole === 'cash-counter')
+          .ms-auto
+            a.btn.btn-primary.mt-2.mt-lg-0(href='/saleReturns/create')
+              i.bx.bxs-plus-square
+              | New Sale Return
+      .row
+        .col-12
+          .card
+            .card-body
+              .table-responsive
+                table#myTable.table.table-striped.table-bordered
+                  thead
+                    tr
+                      th Ser.#
+                      th Date & Time
+                      th Amount
+                      th View Sale Return
+                  tbody
+                    - let i = 0
+                    each saleReturn in saleReturns
+                      tr
+                        td= ++i
+                        td 
+                          .d-flex.align-items-center
+                            .ms-2
+                              - let dateString = moment(saleReturn.createdAt).format('DD-MM-YYYY');
+                              - let timeString = moment(saleReturn.createdAt).format('hh:mm:ss A');
+                              h6.mb-1.font-14 #{dateString}
+                              p.mb-0.font-13.text-secondary #{timeString}
+                        - let amount = (saleReturn.amount * 1).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+                        td #{amount}
+                        td
+                          a.ms-2(href=`/saleReturns/${saleReturn.id}/show` title='View Sale') 
+                            i.bx.bx-sm.bx-show-alt.text-primary
